@@ -1,8 +1,17 @@
 // Initial functions
 document.addEventListener('DOMContentLoaded', function() {
-  createBirthdateForm();
-  handleBirthdateForm();
+  
   createVitalityDisplay();
+
+  // use stored birthdate if already entered
+  chrome.storage.local.get('birthdate', function(data) {
+    if (data.birthdate > 0) {
+      startVitality(data.birthdate);
+    } else {
+      createBirthdateForm();
+      handleBirthdateForm();
+    }
+  });
 });
 
 function createBirthdateForm () {
@@ -32,9 +41,9 @@ function createBirthdateForm () {
 function handleBirthdateForm() {
   var birthdateForm = document.getElementById('birthdateForm');
   if (birthdateForm.attachEvent) {
-    birthdateForm.attachEvent("submit", startVitality);
+    birthdateForm.attachEvent("submit", saveBirthdate);
   } else {
-    birthdateForm.addEventListener("submit", startVitality);
+    birthdateForm.addEventListener("submit", saveBirthdate);
   };
 };
 
@@ -59,20 +68,48 @@ function createVitalityDisplay() {
   vitWrapper.style.display = "none"; // hide for now
 };
 
-function startVitality(e) {
+function saveBirthdate(e) {
   if (e.preventDefault) e.preventDefault();
 
   var birthdateForm = $('#birthdateForm');
-  var birthDate = birthdateForm[0].elements[0].valueAsNumber;
+  var birthdate = birthdateForm[0].elements[0].valueAsNumber;
   birthdateForm.fadeOut('fast');
 
+  // save
+  chrome.storage.local.set({
+    'birthdate': birthdate
+  });
+  startVitality(birthdate);
+};
+
+function startVitality(birthdate) {
   var vit = document.getElementById('vitality');
+  
+  // start timer
   var interval = setInterval(function() {
-    var currentVit = (Date.now() - birthDate) / (365*24*60*60*1000);
+    var currentVit = (Date.now() - birthdate) / (365*24*60*60*1000);
     vit.innerHTML = currentVit.toFixed(9);
   }, 100);
 
+  // add reset button
+  var reset = document.createElement("span");
+  reset.setAttribute('id', "reset");
+  reset.innerHTML = "reset";
+  if (reset.attachEvent) {
+    reset.attachEvent("click", handleReset);
+  } else {
+    reset.addEventListener("click", handleReset);
+  }
+
+  // delay slightly for ux
   setTimeout(function() {
     document.getElementById('vit-wrapper').style.display = "block"; // show 
+    document.body.appendChild(reset);
   }, 400);
+};
+
+function handleReset() {
+  chrome.storage.local.remove('birthdate', function() {
+    location.reload();
+  });
 };
