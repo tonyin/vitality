@@ -14,3 +14,5 @@ Chrome extension to remind everyone of their vitality
 4. Open Chrome and go to `chrome://extensions/`
 
 5. Load unpacked extension... `vitality`
+
+![screenshot](screenshot.png)
