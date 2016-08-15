@@ -1,0 +1,43 @@
+body {
+    background-color: #1E1E20;
+    font-family: "Courier New", Courier, monospace;
+}
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+}
+input[type=date] {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 72px;
+    color: #374140;
+    border: none;
+    background-color: transparent;
+}
+input[type=submit] {
+    font-family: "Courier New", Courier, monospace;
+    font-size: 54px;
+    color: #374140;
+    background-color: transparent;
+    border: none;
+}
+#vitality {
+    font-size: 72px;
+    color: #D9CB9E;
+}
+p {
+    font-size: 42px;
+    color: #374140;
+}
+.unstyled::-webkit-inner-spin-button,
+.unstyled::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+}
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
