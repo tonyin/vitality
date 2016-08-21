@@ -10,11 +10,16 @@ document.addEventListener('DOMContentLoaded', function() {
     } else {
       createBirthdateForm();
       handleBirthdateForm();
-    }
+    };
   });
 });
 
 function createBirthdateForm () {
+
+  var bWrapper = document.createElement("div");
+  bWrapper.setAttribute('id', "b-wrapper");
+  bWrapper.setAttribute('align', "center");
+
   var f = document.createElement("form");
   f.setAttribute('method', "post");
   f.setAttribute('id', 'birthdateForm');
@@ -34,8 +39,13 @@ function createBirthdateForm () {
 
   f.appendChild(bdate);
   f.appendChild(btn);
+  bWrapper.appendChild(f);
 
-  document.getElementsByClassName('container')[0].appendChild(f);
+  var bText = document.createElement("p");
+  bText.innerHTML = "BIRTHDATE";
+  bWrapper.appendChild(bText);
+
+  document.getElementsByClassName('container')[0].appendChild(bWrapper);
 };
 
 function handleBirthdateForm() {
@@ -71,9 +81,9 @@ function createVitalityDisplay() {
 function saveBirthdate(e) {
   if (e.preventDefault) e.preventDefault();
 
-  var birthdateForm = $('#birthdateForm');
-  var birthdate = birthdateForm[0].elements[0].valueAsNumber;
-  birthdateForm.fadeOut('fast');
+  var bWrapper = $('#b-wrapper');
+  var birthdate = document.getElementById('birthdateForm').elements[0].valueAsNumber;
+  bWrapper.fadeOut('fast');
 
   // save
   chrome.storage.local.set({
@@ -89,7 +99,7 @@ function startVitality(birthdate) {
   var interval = setInterval(function() {
     var currentVit = (Date.now() - birthdate) / (365*24*60*60*1000);
     vit.innerHTML = currentVit.toFixed(9);
-  }, 100);
+  }, 50);
 
   // add reset button
   var reset = document.createElement("span");
@@ -99,7 +109,7 @@ function startVitality(birthdate) {
     reset.attachEvent("click", handleReset);
   } else {
     reset.addEventListener("click", handleReset);
-  }
+  };
 
   // delay slightly for ux
   setTimeout(function() {
